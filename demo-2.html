@@ -110,7 +110,7 @@
 		var	$imgs = $('.img-ct>li')
 		var	$pre = $('.pre')
 		var	$next = $('.next')
-		var	$bullet = $('.bullet')
+		var	$bullets = $('.bullet>li')
 		var	imgWidth = $imgs.width()
         var	imgCount = $imgs.length
         //播放函数，当前淡出，目标淡入，并设置当前值为目标值
@@ -134,14 +134,14 @@
         function playNext(){
             play((curIndex + 1) % imgCount)
         }
-        播放前一张
+        //播放前一张
         function playPre(){
             play((imgCount + curIndex -1) % imgCount)
         }
         //导航条设置
         function setBullet(){
-			$bullet.children().removeClass('active')
-				   .eq(curIndex).addClass('active')
+			$bullets.removeClass('active')
+				    .eq(curIndex).addClass('active')
         }
         //自动播放
         var timer = null
@@ -159,8 +159,9 @@
             playPre()
         })
         //导航条跳转
-        $bullet.on('clcik','>li',function(){
+        $bullets.click(function(){
             var index = $(this).index()
+            console.log(index)
             play(index)
         })
         //鼠标进入移出动画暂停播放
