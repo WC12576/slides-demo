@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>demo-1</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        ul,li{
+            list-style: none;
+        }
+        a{
+            text-decoration: none;
+        }
+        .carousel{
+            position: relative;
+            width: 320px;
+            height: 180px;
+            overflow: hidden; 
+        }
+        .img-ct{
+            position: absolute;
+            /* width: 1280px; */
+            height: 180px;
+        }
+        .img-ct li{
+            position: absolute;
+            height: 180px;
+            display: none;
+        }
+        .img-ct img{
+            width: 320px;
+            height: 180px;
+        }
+        .arrow{
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            text-align: center;
+            color: #fff;
+        }
+        .arrow:hover{
+            opacity: .8;
+        }
+        .pre{
+            left: 10px;
+        }
+        .next{
+            right: 10px;
+        }
+        .bullet{
+            position: absolute;
+            width: 100%;
+            bottom: 10px;
+            font-size: 0;
+            text-align: center;
+            z-index: 1;
+        }
+        .bullet li{
+            display: inline-block;
+            width: 30px;
+            height: 10px;
+            margin: 0 3px;
+            border: 1px solid #CCC;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .bullet li.active{
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="carousel">
+        <ul class="img-ct">
+            <li>
+                <a href=""><img src="http://cdn.jirengu.com/book.jirengu.com/img/2.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href=""><img src="http://cdn.jirengu.com/book.jirengu.com/img/3.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href=""><img src="http://cdn.jirengu.com/book.jirengu.com/img/4.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href=""><img src="http://cdn.jirengu.com/book.jirengu.com/img/5.jpg" alt=""></a>
+            </li>
+        </ul>
+        <a class="pre arrow" href="#"><</a>
+        <a class="next arrow" href="#">></a>
+        <ul class="bullet">
+            <li class="active"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script src="./jquery.min.js"></script>
+    <script>
+        var $imgCt = $('.img-ct')
+		var	$imgs = $('.img-ct>li')
+		var	$pre = $('.pre')
+		var	$next = $('.next')
+		var	$bullet = $('.bullet')
+		var	imgWidth = $imgs.width()
+        var	imgCount = $imgs.length
+        //播放函数，当前淡出，目标淡入，并设置当前值为目标值
+        var curIndex = 0
+        var clock = false
+        function play(index){
+            // console.log(index)
+            // console.log(curIndex)
+            if(clock) return
+            clock = true
+            $imgs.eq(curIndex).fadeOut(500)
+            $imgs.eq(index).fadeIn(500,function(){
+                clock = false
+            })
+            curIndex = index
+            setBullet()
+        }
+        //设置首张显示
+        play(0)
+        //播放下一张
+        function playNext(){
+            play((curIndex + 1) % imgCount)
+        }
+        播放前一张
+        function playPre(){
+            play((imgCount + curIndex -1) % imgCount)
+        }
+        //导航条设置
+        function setBullet(){
+			$bullet.children().removeClass('active')
+				   .eq(curIndex).addClass('active')
+        }
+        //自动播放
+        var timer = null
+        function playAuto(){
+			timer = setInterval(function(){
+				playNext()
+			}, 2000)	
+        }
+        playAuto()
+        //点击播放前一张后一张
+        $next.on('click',function(){
+            playNext()
+        })
+        $pre.click(function(){
+            playPre()
+        })
+        //导航条跳转
+        $bullet.on('clcik','>li',function(){
+            var index = $(this).index()
+            play(index)
+        })
+        //鼠标进入移出动画暂停播放
+        $imgs.mouseover(function(){
+            clearInterval(timer)
+            timer = null
+        })
+        $imgs.mouseout(function(){
+            playAuto()
+        })
+    </script>
+    
+</body>
+</html>
